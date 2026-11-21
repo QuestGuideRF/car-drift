@@ -1,0 +1,61 @@
+[package]
+name = "eframe_template"
+version = "0.1.0"
+authors = ["Эмиль Эрнерфельдт <emil.ernerfeldt@gmail.com>"]
+edition = "2021"
+include = ["**/*.rs", "Cargo.toml"]
+[package.metadata.docs.rs]
+all-features = true
+targets = ["x86_64-unknown-linux-gnu", "wasm32-unknown-unknown"]
+[dependencies]
+egui = "0.28.1"
+eframe = { version = "0.28", default-features = false, features = [
+    "accesskit",     # Сделайте egui совместимым с программами чтения с экрана. ПРИМЕЧАНИЕ: добавляет множество зависимостей.
+    "default_fonts", # Вставьте шрифты egui по умолчанию.
+    "glow",          # Используйте серверную часть рендеринга свечения. Альтернатива: «вгпу».
+    "persistence",   # Включите восстановление состояния приложения при перезапуске приложения.
+] }
+log = "0.4"
+egui_plot = "0.28.1"
+rand = "0.8.5"
+getrandom = {version = "0.2.15", features = ["js"] }
+differential-evolution = "0.2.2"
+spiril = { git = "https://github.com/Jeffail/spiril" }
+# cmaes = {версия = "0.2.1", функции = [], функции по умолчанию = false }
+cmaes = { git = "https://github.com/optozorax/cmaes", features = [], default-features = false }
+argmin = "0.10.0"
+argmin-math = { version = "0.4.0", features = ["ndarray_v0_15-nolinalg"] }
+finitediff = { version = "0.1.4", features = ["ndarray"] }
+ndarray = "0.15.6"
+argmin-observer-slog = "0.1.0"
+rand_xoshiro = "0.6.0"
+rayon = "1.10.0"
+serde_json = "1"
+serde = { version = "1", features = ["derive"] }
+chrono = "0.4"
+# native:
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+env_logger = "0.10"
+color-backtrace = "0.5.0"
+# web:
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = "0.4"
+# для доступа к DOM (чтобы скрыть текст загрузки)
+[target.'cfg(target_arch = "wasm32")'.dependencies.web-sys]
+# ХАК: прикрепите web-sys к <0.3.70, пока не будет выпущен новый `eframe`, содержащий
+# следующий PR: https:
+version = ">= 0.3.4, < 0.3.70"
+[profile.release]
+opt-level = 3 # быстрый и маленький васм
+# Оптимизируйте все зависимости даже в отладочных сборках:
+[profile.dev.package."*"]
+opt-level = 2
+[patch.crates-io]
+# Если вы хотите использовать новейшую версию egui и eframe:
+# egui = { git = "https:
+# eframe = { git = "https:
+# Если вы разветвляете https:
+# эгуй = { path = "../egui/crates/egui" }
+# ефрейм = { path = "../egui/crates/eframe" }
+[dev-dependencies]
+approx = "0.5"
